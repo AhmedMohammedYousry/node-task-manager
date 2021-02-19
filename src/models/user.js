@@ -20,6 +20,7 @@ const userSchema = new mongoose.Schema({
     },
     email: {
         type: String,
+        unique: true,
         required: true,
         trim: true,
         lowercase: true,
@@ -43,6 +44,23 @@ const userSchema = new mongoose.Schema({
     }
 })
 
+// by setting up a value on userSchema.statics we're setting that up as something we can access
+// directly on the model once we actually have access to it.
+
+userSchema.statics.findByCredentials = async (email, password) => {
+    const user = await User.findOne({ email })
+    if (!user) {
+        throw new Error('Unable to login.')
+    }
+    const isMatch = await bcrypt.compare(password, user.password)
+    if (!isMatch) {
+        throw new Error('Unable to login.')
+    }
+    return user
+}
+
+
+// hash the plaintext password before saving
 // The second argument needs to be a standard function not an arrow function because the this binding plays an important
 // role and as we know arrow functions don't bind this.
 userSchema.pre('save', async function(next) {
