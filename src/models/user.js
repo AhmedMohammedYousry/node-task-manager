@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 const validator = require('validator')
 const bcrypt = require('bcryptjs')
+const jwt = require('jsonwebtoken')
 
 const userSchema = new mongoose.Schema({
     name: {
@@ -41,8 +42,26 @@ const userSchema = new mongoose.Schema({
                 throw new Error('You cannot use password keyword in your password!')
             }
         }
-    }
+    },
+    tokens: [{ 
+        token: {
+            type: String,
+            required: true
+        }
+     }]
 })
+
+// so static methods are accessible on the model sometimes called Model methods 
+// and our methods are accessible on the instances sometimes called instance methods
+userSchema.methods.generateAuthToken = async function() {
+    const user = this
+    // provide a payload that uniquely identifies the user and here we're just going to use their id
+    const token = jwt.sign({ _id: user._id.toString() }, 'thisismynewtoken')
+
+    user.tokens = user.tokens.concat({ token })
+    await user.save()
+    return token
+}
 
 // by setting up a value on userSchema.statics we're setting that up as something we can access
 // directly on the model once we actually have access to it.
