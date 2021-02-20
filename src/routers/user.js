@@ -1,6 +1,6 @@
 const express = require('express')
 const User = require('../models/user')
-
+const auth = require('../middleware/auth')
 const router = new express.Router()
 
 // with the new router in place we can setup all over the routes we want to support
@@ -35,19 +35,8 @@ router.post('/users/login', async (req, res) => {
     }
 })
 
-router.get('/users', async (req, res) => {
-
-    try {
-        const users = await User.find()
-        res.send(users)
-    } catch (e) {
-        res.status(500).send()
-    }
-    // User.find().then((users) => {
-    //     res.send(users)
-    // }).catch((e) =>{
-    //     res.status(500).send()
-    // })
+router.get('/users/me', auth, async (req, res) => {
+    res.send(req.user)
 })
 router.get('/users/:id', async (req, res) => {
     const _id = req.params.id
