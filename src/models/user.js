@@ -51,6 +51,15 @@ const userSchema = new mongoose.Schema({
      }]
 })
 
+userSchema.methods.toJSON = function() {
+    const user = this
+    const userObject = user.toObject()
+
+    delete userObject.password
+    delete userObject.tokens
+    return userObject
+}
+
 // so static methods are accessible on the model sometimes called Model methods 
 // and our methods are accessible on the instances sometimes called instance methods
 userSchema.methods.generateAuthToken = async function() {
