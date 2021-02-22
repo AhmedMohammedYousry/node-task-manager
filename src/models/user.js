@@ -51,6 +51,17 @@ const userSchema = new mongoose.Schema({
      }]
 })
 
+// foreign field is the name of the field on the other thing (on the task) that's going to create this relationship
+//  and we set that up to be the owner. The local field is that is where that local data is stored.
+
+// So we have the owner object id on the task and that is associated with the id of the user here.
+// So the local field the users id is a relationship between that and the task owner field which is also a user I.D..
+userSchema.virtual('tasks', {
+    ref: 'Task',
+    localField: '_id',
+    foreignField: 'owner'
+})
+
 userSchema.methods.toJSON = function() {
     const user = this
     const userObject = user.toObject()
