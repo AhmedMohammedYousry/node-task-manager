@@ -50,6 +50,8 @@ const userSchema = new mongoose.Schema({
             required: true
         }
      }]
+}, {
+    timestamps: true
 })
 
 // foreign field is the name of the field on the other thing (on the task) that's going to create this relationship

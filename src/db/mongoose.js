@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 // const validator = require('validator')
 
-mongoose.connect('mongodb://127.0.0.1:27017/task-manager-api-latest-v2', {
+mongoose.connect('mongodb://127.0.0.1:27017/task-manager-api-latest-v3', {
     useNewUrlParser: true,
     useCreateIndex: true ,//This is going to make sure that when Mongoose works with MongoDB our indexes
                          //   are created allowing us to quickly access the data we need to access.
